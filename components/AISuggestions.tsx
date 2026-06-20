@@ -56,13 +56,13 @@ export default function AISuggestions({ jdText, missingSkills }: AISuggestionsPr
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6 bg-slate-900 border border-slate-800 rounded-xl shadow-lg mt-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+    <div className="flex flex-col gap-6 p-6 glass border border-moss-700/15 rounded-xl shadow-lg mt-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-moss-750">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-teal-400 animate-pulse" />
+          <Sparkles className="h-5 w-5 text-moss-500 animate-pulse" />
           <div>
-            <h2 className="text-lg font-bold text-slate-100">AI Tailoring Suggestions</h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <h2 className="text-lg font-bold text-slate-100 font-heading">AI Tailoring Suggestions</h2>
+            <p className="text-xs text-slate-500 mt-0.5 font-sans">
               Optimize resume bullet points to highlight missing skills.
             </p>
           </div>
@@ -71,7 +71,7 @@ export default function AISuggestions({ jdText, missingSkills }: AISuggestionsPr
           type="button"
           onClick={handleGetSuggestions}
           disabled={loading || missingSkills.length === 0}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-slate-900 bg-teal-400 hover:bg-teal-350 disabled:opacity-50 disabled:hover:bg-teal-400 rounded-md shadow-sm transition-all shrink-0 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-bold text-white bg-moss-600 hover:bg-moss-500 disabled:opacity-50 disabled:hover:bg-moss-600 rounded-md shadow-sm transition-all shrink-0 cursor-pointer"
         >
           {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -84,13 +84,13 @@ export default function AISuggestions({ jdText, missingSkills }: AISuggestionsPr
 
       {loading && (
         <div className="flex flex-col items-center justify-center py-12 gap-3">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-400" />
-          <p className="text-sm text-slate-400">Analyzing skills gaps and generating tailor-made recommendations...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-moss-500" />
+          <p className="text-sm text-slate-400 font-sans">Analyzing skills gaps and generating tailor-made recommendations...</p>
         </div>
       )}
 
       {error && (
-        <div className="flex items-start gap-3 p-4 bg-slate-950/40 border border-amber-500/20 text-slate-300 rounded-md text-sm leading-relaxed">
+        <div className="flex items-start gap-3 p-4 bg-slate-950/40 border border-amber-500/20 text-slate-350 rounded-md text-sm leading-relaxed font-sans">
           <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
@@ -99,30 +99,30 @@ export default function AISuggestions({ jdText, missingSkills }: AISuggestionsPr
       {!loading && suggestions.length > 0 && (
         <div className="flex flex-col gap-6">
           {suggestions.map((suggestion, index) => (
-            <div key={index} className="flex flex-col gap-3 p-5 bg-slate-950/40 border border-slate-800 rounded-lg">
+            <div key={index} className="flex flex-col gap-3 p-5 glass-soft border border-moss-700/15 rounded-lg shadow-inner">
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-450 border border-teal-500/20">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-moss-700/15 text-moss-500 border border-moss-700/25">
                   Target Skill: {suggestion.skill}
                 </span>
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-sans">
                   Recommendation #{index + 1}
                 </span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                <div className="flex flex-col gap-1.5 p-3.5 bg-slate-950/40 rounded border border-slate-850">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                <div className="flex flex-col gap-1.5 p-3.5 bg-slate-950/60 rounded border border-slate-900/60">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-sans">
                     Original Bullet (Before)
                   </span>
-                  <p className="text-xs text-slate-400 italic">
+                  <p className="text-xs text-slate-400 italic font-sans leading-relaxed">
                     "{suggestion.before}"
                   </p>
                 </div>
-                <div className="flex flex-col gap-1.5 p-3.5 bg-teal-950/10 rounded border border-teal-550/10">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-teal-450">
+                <div className="flex flex-col gap-1.5 p-3.5 bg-moss-950/15 rounded border border-moss-500/10">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-moss-500 font-sans">
                     Suggested Rewrite (After)
                   </span>
-                  <p className="text-xs text-slate-200 font-medium">
+                  <p className="text-xs text-slate-200 font-medium font-sans leading-relaxed">
                     "{suggestion.after}"
                   </p>
                 </div>
@@ -134,7 +134,7 @@ export default function AISuggestions({ jdText, missingSkills }: AISuggestionsPr
 
       {!loading && suggestions.length === 0 && !error && (
         <div className="flex flex-col items-center justify-center py-6 text-center">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 font-sans">
             {missingSkills.length === 0 
               ? "All key skills are already covered in your resume! No suggestions needed." 
               : "Click 'Get AI Suggestions' above to generate optimized bullet points using Gemini."}

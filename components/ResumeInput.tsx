@@ -52,19 +52,19 @@ export default function ResumeInput({ value, onChange }: ResumeInputProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <label htmlFor="resume-text" className="text-sm font-semibold text-slate-200">
+        <label htmlFor="resume-text" className="text-sm font-semibold text-slate-300 font-heading">
           Resume Content
         </label>
         <button
           type="button"
           onClick={triggerFileSelect}
           disabled={loading}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:text-white border border-slate-700 bg-slate-800 hover:bg-slate-700 rounded-md transition-all shadow-sm disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-350 hover:text-white border border-moss-700/30 bg-moss-950/20 hover:bg-moss-700/15 rounded-md transition-all shadow-sm disabled:opacity-50 cursor-pointer"
         >
           {loading ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin text-teal-400" />
+            <Loader2 className="h-3.5 w-3.5 animate-spin text-moss-500" />
           ) : (
-            <Upload className="h-3.5 w-3.5 text-teal-400" />
+            <Upload className="h-3.5 w-3.5 text-moss-500" />
           )}
           {loading ? 'Processing...' : 'Upload PDF or DOCX'}
         </button>
@@ -84,7 +84,7 @@ export default function ResumeInput({ value, onChange }: ResumeInputProps) {
           onChange={(e) => onChange(e.target.value)}
           placeholder="Paste resume content here, or upload a PDF/DOCX file above..."
           rows={12}
-          className="w-full rounded-md border border-slate-700 bg-slate-800 p-4 text-sm text-slate-100 placeholder-slate-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 transition-colors resize-none"
+          className="w-full rounded-md border border-moss-700/30 bg-ink-0/60 p-4 text-sm text-slate-100 placeholder-slate-550 focus:border-moss-500 focus:outline-none focus:ring-1 focus:ring-moss-500 transition-colors resize-none leading-relaxed font-sans"
         />
       </div>
 

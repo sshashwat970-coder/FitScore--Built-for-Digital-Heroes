@@ -19,13 +19,11 @@ export default function Home() {
     if (!resumeText.trim() || !jdText.trim()) return;
 
     setIsCalculating(true);
-    // Simulate a brief calculation delay for visual feedback of matching action
     setTimeout(() => {
       const result = checkMatch(resumeText, jdText);
       setMatchResult(result);
       setIsCalculating(false);
       
-      // Smooth scroll to results
       setTimeout(() => {
         const resultsEl = document.getElementById('results-section');
         resultsEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -36,30 +34,30 @@ export default function Home() {
   const isFormValid = resumeText.trim().length > 0 && jdText.trim().length > 0;
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50">
+    <div className="flex flex-col min-h-screen bg-ink-0 text-slate-100">
       {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-800 text-white py-6 shadow-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <header className="bg-ink-0 border-b border-moss-700/15 py-7 shadow-sm z-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="bg-teal-500/10 p-2 rounded-lg border border-teal-500/20">
-              <Briefcase className="h-6 w-6 text-teal-450" />
+            <div className="bg-moss-700/10 p-2 rounded-lg border border-moss-500/15">
+              <Briefcase className="h-6 w-6 text-moss-500" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white">FitScore</h1>
-              <p className="text-xs font-semibold tracking-wider uppercase text-slate-400 mt-0.5">
+              <h1 className="text-xl font-bold tracking-tight text-white font-heading">FitScore</h1>
+              <p className="text-[10px] font-bold tracking-wider uppercase text-moss-500 mt-0.5 font-sans">
                 Made for Digital Heroes
               </p>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden md:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-850 border border-slate-800 text-slate-350">
+            <span className="hidden md:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-moss-950/40 border border-moss-700/20 text-moss-500/80">
               Engine v1.0
             </span>
             <a
               href="https://digitalheroesco.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-slate-900 bg-teal-450 hover:bg-teal-350 transition-colors rounded shadow-sm"
+              className="inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-white bg-moss-600 hover:bg-moss-500 transition-colors rounded shadow-sm tracking-wide"
             >
               Built for Digital Heroes
             </a>
@@ -68,31 +66,31 @@ export default function Home() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-10">
+      <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12 flex flex-col gap-10">
         
         {/* Intro */}
         <div className="max-w-3xl flex flex-col gap-2">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-            Compare Resume and Job Description
+          <h2 className="text-3xl font-extrabold tracking-tight text-white font-heading">
+            Tailor Your Resume For The Perfect Match
           </h2>
-          <p className="text-sm text-slate-650 leading-relaxed">
-            Upload your resume in PDF/DOCX format or paste as plain text. Paste the target job description to instantly analyze match percentage, identify key skills gaps, and get optimization rewrite suggestions.
+          <p className="text-sm text-slate-400 leading-relaxed font-medium">
+            Upload your resume (PDF/DOCX) or paste plain text. Compare it against the target job description to instantly analyze match percentage, highlight critical skill gaps, and get optimizations.
           </p>
         </div>
 
-        {/* Workspace Card */}
-        <div className="bg-slate-900 border border-slate-850 rounded-2xl shadow-xl p-6 sm:p-8 flex flex-col gap-8">
+        {/* Workspace Card (Glass container) */}
+        <div className="glass rounded-2xl shadow-xl p-6 sm:p-8 flex flex-col gap-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <ResumeInput value={resumeText} onChange={setResumeText} />
             <JDInput value={jdText} onChange={setJdText} />
           </div>
 
-          <div className="flex justify-center border-t border-slate-800 pt-6">
+          <div className="flex justify-center border-t border-moss-700/15 pt-6">
             <button
               type="button"
               onClick={handleCheckMatch}
               disabled={!isFormValid || isCalculating}
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-base font-semibold text-white bg-teal-600 hover:bg-teal-550 disabled:opacity-50 disabled:hover:bg-teal-600 rounded-lg shadow-md transition-all duration-150 cursor-pointer min-w-[200px]"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-base font-bold text-white bg-moss-600 hover:bg-moss-500 disabled:opacity-50 disabled:hover:bg-moss-600 rounded-lg shadow-md transition-all cursor-pointer min-w-[200px]"
             >
               {isCalculating ? (
                 <>

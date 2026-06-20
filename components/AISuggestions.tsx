@@ -10,14 +10,14 @@ interface Suggestion {
 interface AISuggestionsProps {
   jdText: string;
   missingSkills: string[];
-  resumeText: string;
+  resumeText?: string;
   onApplySuggestion?: (before: string, after: string) => void;
 }
 
 export default function AISuggestions({ 
   jdText, 
   missingSkills, 
-  resumeText,
+  resumeText = '',
   onApplySuggestion 
 }: AISuggestionsProps) {
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,7 @@ export default function AISuggestions({
       )}
 
       {error && (
-        <div className="flex items-start gap-3 p-4 bg-slate-950/40 border border-amber-500/20 text-slate-350 rounded-md text-sm leading-relaxed font-sans">
+        <div className="flex items-start gap-3 p-4 bg-slate-950/40 border border-amber-500/20 text-slate-355 rounded-md text-sm leading-relaxed font-sans">
           <AlertCircle className="h-5 w-5 text-amber-550 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
@@ -107,11 +107,11 @@ export default function AISuggestions({
       {!loading && suggestions.length > 0 && (
         <div className="flex flex-col gap-6">
           {suggestions.map((suggestion, index) => {
-            const beforeClean = suggestion.before.trim();
-            const afterClean = suggestion.after.trim();
+            const beforeClean = (suggestion.before || '').trim();
+            const afterClean = (suggestion.after || '').trim();
             
-            const isApplied = afterClean && resumeText.includes(afterClean);
-            const hasBefore = beforeClean && resumeText.toLowerCase().includes(beforeClean.toLowerCase());
+            const isApplied = afterClean && resumeText && resumeText.includes(afterClean);
+            const hasBefore = beforeClean && resumeText && resumeText.toLowerCase().includes(beforeClean.toLowerCase());
             
             return (
               <div key={index} className="flex flex-col gap-3 p-5 glass-soft border border-moss-700/15 rounded-lg shadow-inner">
@@ -121,7 +121,7 @@ export default function AISuggestions({
                   </span>
                   
                   {isApplied ? (
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-moss-500 bg-moss-500/10 px-2.5 py-1 rounded border border-moss-500/20">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-moss-500 bg-moss-500/10 px-2.5 py-1 rounded border border-moss-500/20 animate-fade-in">
                       <Check className="h-3.5 w-3.5" />
                       Applied
                     </span>

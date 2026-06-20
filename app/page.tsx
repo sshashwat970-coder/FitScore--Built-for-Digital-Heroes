@@ -5,10 +5,8 @@ import ResumeInput from '@/components/ResumeInput';
 import JDInput from '@/components/JDInput';
 import ResultsPanel from '@/components/ResultsPanel';
 import AISuggestions from '@/components/AISuggestions';
-import SiteFooter from '@/components/SiteFooter';
 import { checkMatch, MatchResult } from '@/lib/matchEngine';
-import { exportResumeToPdf } from '@/lib/pdfExporter';
-import { Briefcase, CheckCircle, Download } from 'lucide-react';
+import { Briefcase, CheckCircle } from 'lucide-react';
 
 export default function Home() {
   const [resumeText, setResumeText] = useState('');
@@ -32,31 +30,29 @@ export default function Home() {
     }, 400);
   };
 
-  const handleApplySuggestion = (before: string, after: string) => {
-    const index = resumeText.toLowerCase().indexOf(before.toLowerCase());
-    if (index !== -1) {
-      const updatedText = 
-        resumeText.substring(0, index) + 
-        after + 
-        resumeText.substring(index + before.length);
-      
-      setResumeText(updatedText);
-      
-      // Auto-recalculate match scores immediately
-      const result = checkMatch(updatedText, jdText);
-      setMatchResult(result);
-    }
-  };
-
-  const handleExportPdf = () => {
-    if (!resumeText.trim()) return;
-    exportResumeToPdf(resumeText, 'tailored_resume.pdf');
-  };
-
   const isFormValid = resumeText.trim().length > 0 && jdText.trim().length > 0;
 
   return (
     <div className="flex flex-col min-h-screen bg-ink-0 text-slate-100">
+      {/* Top Utility Bar */}
+      <div className="bg-moss-950/20 border-b border-moss-700/10 py-3 text-xs text-slate-400 font-sans z-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-4">
+            <span className="font-semibold text-slate-200 font-heading">Shashwat Singh</span>
+            <span className="text-moss-700/60">|</span>
+            <a 
+              href="mailto:sshashwat970@gmail.com" 
+              className="text-moss-500 hover:text-amber-500 transition-colors font-medium"
+            >
+              sshashwat970@gmail.com
+            </a>
+          </div>
+          <div className="text-[10px] uppercase font-bold tracking-wider text-moss-500/70">
+            Candidate Trial Submission
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <header className="bg-ink-0 border-b border-moss-700/15 py-7 shadow-sm z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
@@ -107,7 +103,7 @@ export default function Home() {
             <JDInput value={jdText} onChange={setJdText} />
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 border-t border-moss-700/15 pt-6">
+          <div className="flex justify-center border-t border-moss-700/15 pt-6">
             <button
               type="button"
               onClick={handleCheckMatch}
@@ -126,17 +122,6 @@ export default function Home() {
                 </>
               )}
             </button>
-
-            {resumeText.trim().length > 0 && (
-              <button
-                type="button"
-                onClick={handleExportPdf}
-                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-base font-bold text-slate-200 hover:text-white border border-moss-700/40 bg-moss-950/20 hover:bg-moss-700/15 rounded-lg shadow-md transition-all cursor-pointer min-w-[200px]"
-              >
-                <Download className="h-5 w-5 text-moss-500" />
-                Export Resume (PDF)
-              </button>
-            )}
           </div>
         </div>
 
@@ -153,15 +138,11 @@ export default function Home() {
             <AISuggestions 
               jdText={jdText} 
               missingSkills={matchResult.missingSkills} 
-              resumeText={resumeText}
-              onApplySuggestion={handleApplySuggestion}
             />
           </div>
         )}
       </main>
 
-      {/* Footer */}
-      <SiteFooter />
     </div>
   );
 }

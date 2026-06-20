@@ -1,5 +1,22 @@
 import { PDFParse } from 'pdf-parse';
 import mammoth from 'mammoth';
+import path from 'path';
+import { pathToFileURL } from 'url';
+
+// Import pdfjs and ensure the worker is traced by Next.js bundler
+// @ts-ignore
+import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
+// @ts-ignore
+import 'pdfjs-dist/legacy/build/pdf.worker.mjs';
+
+if (typeof window === 'undefined') {
+  try {
+    const workerPath = path.join(process.cwd(), 'node_modules', 'pdfjs-dist', 'legacy', 'build', 'pdf.worker.mjs');
+    pdfjs.GlobalWorkerOptions.workerSrc = pathToFileURL(workerPath).href;
+  } catch (err) {
+    console.error('Failed to configure pdfjs worker path:', err);
+  }
+}
 
 export async function parsePdf(buffer: Buffer): Promise<string> {
   try {

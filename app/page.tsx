@@ -7,7 +7,8 @@ import ResultsPanel from '@/components/ResultsPanel';
 import AISuggestions from '@/components/AISuggestions';
 import SiteFooter from '@/components/SiteFooter';
 import { checkMatch, MatchResult } from '@/lib/matchEngine';
-import { Briefcase, CheckCircle } from 'lucide-react';
+import { exportResumeToPdf } from '@/lib/pdfExporter';
+import { Briefcase, CheckCircle, Download } from 'lucide-react';
 
 export default function Home() {
   const [resumeText, setResumeText] = useState('');
@@ -29,6 +30,27 @@ export default function Home() {
         resultsEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     }, 400);
+  };
+
+  const handleApplySuggestion = (before: string, after: string) => {
+    const index = resumeText.toLowerCase().indexOf(before.toLowerCase());
+    if (index !== -1) {
+      const updatedText = 
+        resumeText.substring(0, index) + 
+        after + 
+        resumeText.substring(index + before.length);
+      
+      setResumeText(updatedText);
+      
+      // Auto-recalculate match scores immediately
+      const result = checkMatch(updatedText, jdText);
+      setMatchResult(result);
+    }
+  };
+
+  const handleExportPdf = () => {
+    if (!resumeText.trim()) return;
+    exportResumeToPdf(resumeText, 'tailored_resume.pdf');
   };
 
   const isFormValid = resumeText.trim().length > 0 && jdText.trim().length > 0;
@@ -85,7 +107,7 @@ export default function Home() {
             <JDInput value={jdText} onChange={setJdText} />
           </div>
 
-          <div className="flex justify-center border-t border-moss-700/15 pt-6">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 border-t border-moss-700/15 pt-6">
             <button
               type="button"
               onClick={handleCheckMatch}
@@ -104,6 +126,17 @@ export default function Home() {
                 </>
               )}
             </button>
+
+            {resumeText.trim().length > 0 && (
+              <button
+                type="button"
+                onClick={handleExportPdf}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-base font-bold text-slate-200 hover:text-white border border-moss-700/40 bg-moss-950/20 hover:bg-moss-700/15 rounded-lg shadow-md transition-all cursor-pointer min-w-[200px]"
+              >
+                <Download className="h-5 w-5 text-moss-500" />
+                Export Resume (PDF)
+              </button>
+            )}
           </div>
         </div>
 
@@ -120,6 +153,8 @@ export default function Home() {
             <AISuggestions 
               jdText={jdText} 
               missingSkills={matchResult.missingSkills} 
+              resumeText={resumeText}
+              onApplySuggestion={handleApplySuggestion}
             />
           </div>
         )}

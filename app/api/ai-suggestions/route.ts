@@ -11,14 +11,10 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const { jdText, missingSkills, resumeText } = await req.json();
+    const { jdText, missingSkills } = await req.json();
 
     if (!jdText) {
       return NextResponse.json({ error: 'Job description is required.', suggestions: [] }, { status: 400 });
-    }
-
-    if (!resumeText) {
-      return NextResponse.json({ error: 'Resume is required.', suggestions: [] }, { status: 400 });
     }
 
     if (!missingSkills || !Array.isArray(missingSkills) || missingSkills.length === 0) {
@@ -38,15 +34,9 @@ export async function POST(req: NextRequest) {
 
     const prompt = `
 You are an expert technical resume writer.
-Review the candidate's Resume, the Job Description, and the list of Missing Skills.
-Select 3 to 5 actual, specific bullet points or sentences from the candidate's Resume that are generic, lack impact, or can be improved, and rewrite them to incorporate one or more of the missing skills.
-
-CRITICAL: For each suggestion, the "before" field MUST contain the EXACT text of the original bullet point or sentence from the candidate's Resume so it can be automatically replaced. Do not summarize or alter the "before" text. The "after" field must contain the rewritten bullet point incorporating the skill with specific action and quantitative metrics.
-
-Candidate Resume:
-"""
-${resumeText}
-"""
+Review the following Job Description and the list of Missing Skills that were identified as gaps in the candidate's resume.
+Generate 3 to 5 concrete, highly specific, and actionable resume bullet-point rewrite suggestions.
+Each suggestion should demonstrate how the candidate could incorporate one or more of the missing skills by showing a "Before" (generic version) and "After" (tailored, impact-driven version using the STAR method: Situation, Task, Action, Result) rewrite.
 
 Job Description:
 """
@@ -60,7 +50,7 @@ Return ONLY a valid JSON array of objects with the following structure:
 [
   {
     "skill": "Name of the missing skill being addressed",
-    "before": "The EXACT bullet point or text from the candidate's resume to replace",
+    "before": "A plausible generic resume bullet point",
     "after": "The rewritten bullet point incorporating the skill with specific action and quantitative metrics"
   }
 ]
@@ -83,6 +73,7 @@ Return ONLY a valid JSON array of objects with the following structure:
     return NextResponse.json({ suggestions });
   } catch (error: any) {
     console.error('Error in AI suggestions route:', error);
+    // Graceful degradation for quota exceed, model unavailable, network issue, etc.
     return NextResponse.json({
       error: 'AI suggestions are temporarily unavailable — your match score above is unaffected.',
       suggestions: []

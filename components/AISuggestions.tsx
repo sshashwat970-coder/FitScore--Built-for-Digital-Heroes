@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Loader2, AlertCircle, Check } from 'lucide-react';
+import { Sparkles, Loader2, AlertCircle } from 'lucide-react';
 
 interface Suggestion {
   skill: string;
@@ -10,22 +10,15 @@ interface Suggestion {
 interface AISuggestionsProps {
   jdText: string;
   missingSkills: string[];
-  resumeText?: string;
-  onApplySuggestion?: (before: string, after: string) => void;
 }
 
-export default function AISuggestions({ 
-  jdText, 
-  missingSkills, 
-  resumeText = '',
-  onApplySuggestion 
-}: AISuggestionsProps) {
+export default function AISuggestions({ jdText, missingSkills }: AISuggestionsProps) {
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const handleGetSuggestions = async () => {
-    if (!jdText || !resumeText) return;
+    if (!jdText) return;
     setLoading(true);
     setError(null);
     setSuggestions([]);
@@ -39,7 +32,6 @@ export default function AISuggestions({
         body: JSON.stringify({
           jdText,
           missingSkills,
-          resumeText
         }),
       });
 
@@ -98,69 +90,45 @@ export default function AISuggestions({
       )}
 
       {error && (
-        <div className="flex items-start gap-3 p-4 bg-slate-950/40 border border-amber-500/20 text-slate-355 rounded-md text-sm leading-relaxed font-sans">
-          <AlertCircle className="h-5 w-5 text-amber-550 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 p-4 bg-slate-950/40 border border-amber-500/20 text-slate-350 rounded-md text-sm leading-relaxed font-sans">
+          <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       {!loading && suggestions.length > 0 && (
         <div className="flex flex-col gap-6">
-          {suggestions.map((suggestion, index) => {
-            const beforeClean = (suggestion.before || '').trim();
-            const afterClean = (suggestion.after || '').trim();
-            
-            const isApplied = afterClean && resumeText && resumeText.includes(afterClean);
-            const hasBefore = beforeClean && resumeText && resumeText.toLowerCase().includes(beforeClean.toLowerCase());
-            
-            return (
-              <div key={index} className="flex flex-col gap-3 p-5 glass-soft border border-moss-700/15 rounded-lg shadow-inner">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-moss-700/15 text-moss-500 border border-moss-700/25 self-start">
-                    Target Skill: {suggestion.skill}
-                  </span>
-                  
-                  {isApplied ? (
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-moss-500 bg-moss-500/10 px-2.5 py-1 rounded border border-moss-500/20 animate-fade-in">
-                      <Check className="h-3.5 w-3.5" />
-                      Applied
-                    </span>
-                  ) : hasBefore ? (
-                    <button
-                      type="button"
-                      onClick={() => onApplySuggestion?.(suggestion.before, suggestion.after)}
-                      className="px-3 py-1.5 text-xs font-bold text-white bg-moss-600 hover:bg-moss-500 rounded transition-colors shadow-sm cursor-pointer self-start"
-                    >
-                      Apply Rewrite
-                    </button>
-                  ) : (
-                    <span className="text-[10px] text-slate-500 font-bold bg-slate-950/40 px-2.5 py-1 rounded border border-slate-900 self-start">
-                      Original Text Modified
-                    </span>
-                  )}
-                </div>
+          {suggestions.map((suggestion, index) => (
+            <div key={index} className="flex flex-col gap-3 p-5 glass-soft border border-moss-700/15 rounded-lg shadow-inner">
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-moss-700/15 text-moss-500 border border-moss-700/25">
+                  Target Skill: {suggestion.skill}
+                </span>
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-sans">
+                  Recommendation #{index + 1}
+                </span>
+              </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                  <div className="flex flex-col gap-1.5 p-3.5 bg-slate-950/60 rounded border border-slate-900/60">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-sans">
-                      Original Bullet (Before)
-                    </span>
-                    <p className="text-xs text-slate-400 italic font-sans leading-relaxed">
-                      "{suggestion.before}"
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-1.5 p-3.5 bg-moss-950/15 rounded border border-moss-500/10">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-moss-500 font-sans">
-                      Suggested Rewrite (After)
-                    </span>
-                    <p className="text-xs text-slate-200 font-medium font-sans leading-relaxed">
-                      "{suggestion.after}"
-                    </p>
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                <div className="flex flex-col gap-1.5 p-3.5 bg-slate-950/60 rounded border border-slate-900/60">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-sans">
+                    Original Bullet (Before)
+                  </span>
+                  <p className="text-xs text-slate-400 italic font-sans leading-relaxed">
+                    "{suggestion.before}"
+                  </p>
+                </div>
+                <div className="flex flex-col gap-1.5 p-3.5 bg-moss-950/15 rounded border border-moss-500/10">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-moss-500 font-sans">
+                    Suggested Rewrite (After)
+                  </span>
+                  <p className="text-xs text-slate-200 font-medium font-sans leading-relaxed">
+                    "{suggestion.after}"
+                  </p>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
 
